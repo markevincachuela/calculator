@@ -1,12 +1,16 @@
 package com.example.calculator.ui
 
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
@@ -27,33 +31,66 @@ private val numberColumns = listOf(
 )
 
 @Composable
-fun NumberPanel() {
-    Row(
+fun NumberPanel(
+    modifier: Modifier
+) {
+
+    val buttonSpacing = 8.dp
+
+    Box(
         modifier = Modifier
-            .fillMaxSize(),
-        horizontalArrangement = Arrangement.SpaceEvenly
+            .fillMaxSize()
+            .padding(16.dp)
     ) {
-        numberColumns.forEach { numberColumn ->
-            Column(
-                modifier = Modifier.weight(1f),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                numberColumn.forEach { text ->
-                    MainContentButton(text)
-                }
-            }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .align(Alignment.BottomCenter)
+                .background(Color.DarkGray)
+        ) {
+            Text(
+                text = "123",
+                textAlign = TextAlign.End,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp)
+            )
         }
-        Divider(
-            modifier = Modifier.width(1.dp).fillMaxHeight(),
-            color = Color(0xFFd3d3d3)
-        )
-        Column(modifier = Modifier.weight(1.3f)) {
-            operationsColumn.forEach { operation ->
-                OperationItem(text = operation)
-            }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
+        ) {
+
         }
-        Spacer(modifier = Modifier.width(30.dp))
     }
+
+//    Row(
+//        modifier = Modifier
+//            .fillMaxSize(),
+//        horizontalArrangement = Arrangement.SpaceEvenly
+//    ) {
+//        numberColumns.forEach { numberColumn ->
+//            Column(
+//                modifier = Modifier.weight(1f),
+//                horizontalAlignment = Alignment.CenterHorizontally
+//            ) {
+//                numberColumn.forEach { text ->
+//                    MainContentButton(text)
+//                }
+//            }
+//        }
+//        Divider(
+//            modifier = Modifier.width(1.dp).fillMaxHeight(),
+//            color = Color(0xFFd3d3d3)
+//        )
+//        Column(modifier = Modifier.weight(1.3f)) {
+//            operationsColumn.forEach { operation ->
+//                OperationItem(text = operation)
+//            }
+//        }
+//        Spacer(modifier = Modifier.width(30.dp))
+//    }
 }
 
 @Composable
