@@ -24,12 +24,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 
-private val operationsColumn = listOf("Delete", "÷", "x", "-", "+")
+
+private val topColumns = listOf("AC", "Del", "/")
 
 private val numberColumns = listOf(
     listOf("7", "4", "1"),
     listOf("8", "5", "2"),
-    listOf("9", "6", "3")
+    listOf("9", "6", "3"),
+    listOf("x", "+", "-")
 )
 
 @Composable
@@ -42,13 +44,13 @@ fun NumberPanel(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .background(Color.DarkGray)
     ) {
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
                 .align(Alignment.BottomCenter)
-                .background(Color.DarkGray)
+                .padding(16.dp)
         ) {
             Text(
                 text = "123123123",
@@ -64,90 +66,112 @@ fun NumberPanel(
 
             Row(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(buttonSpacing)
+                    .padding(10.dp),
+                horizontalArrangement = Arrangement.spacedBy(5.dp)
             ) {
-                NumberButton(
-                    number = "AC",
-                    modifier = Modifier
-                        .aspectRatio(2F)
-                        .weight(2f),
-                    onClick = {
-                        (Unit)
-                    },
-                    color =  Color.LightGray
-                )
+                topColumns.forEach {
+                    when (it) {
+                        "AC" -> {
+                            NumberButton(
+                                number = it,
+                                modifier = Modifier
+                                    .aspectRatio(2F)
+                                    .weight(2f),
+                                onClick = { },
+                                color = Color.LightGray
+                            )
+                        }
+                        OperatorEnum.DIVIDED.toString() -> {
+                            NumberButton(
+                                number = it,
+                                modifier = Modifier
+                                    .aspectRatio(1f)
+                                    .weight(1f),
+                                onClick = { },
+                                color = Color.Magenta
+                            )
+                        }
+                        else -> {
+                            NumberButton(
+                                number = it,
+                                modifier = Modifier
+                                    .aspectRatio(1f)
+                                    .weight(1f),
+                                onClick = { },
+                                color = Color.LightGray
+                            )
+                        }
+                    }
 
-                NumberButton(
-                    number = "Del",
-                    modifier = Modifier
-                        .aspectRatio(1F)
-                        .weight(1f),
-                    onClick = {
-                        (Unit)
-                    },
-                    color =  Color.LightGray
-                )
+                }
+            }
 
-                NumberButton(
-                    number = "/",
-                    modifier = Modifier
-                        .aspectRatio(1F)
-                        .weight(1f),
-                    onClick = {
-                        (Unit)
-                    },
-                    color =  Color.LightGray
-                )
+            Row {
+                numberColumns.forEach { numberColumn ->
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(5.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(buttonSpacing)
+                    ) {
+                        numberColumn.forEach { text ->
+                            when(text) {
+                                OperatorEnum.MINUS.toString() -> {
+                                    NumberButton(
+                                        number = text,
+                                        modifier = Modifier
+                                            .aspectRatio(1f)
+                                            .weight(1f),
+                                        onClick = { },
+                                        color = Color.Magenta
+                                    )
+                                }
+                                OperatorEnum.MULTIPLY.toString() -> {
+                                    NumberButton(
+                                        number = text,
+                                        modifier = Modifier
+                                            .aspectRatio(1f)
+                                            .weight(1f),
+                                        onClick = { },
+                                        color = Color.Magenta
+                                    )
+                                }
+                                OperatorEnum.PLUS.toString() -> {
+                                    NumberButton(
+                                        number = text,
+                                        modifier = Modifier
+                                            .aspectRatio(1f)
+                                            .weight(1f),
+                                        onClick = { },
+                                        color = Color.Magenta
+                                    )
+                                }
+                                else -> {
+                                    NumberButton(
+                                        number = text,
+                                        modifier = Modifier
+                                            .aspectRatio(1f)
+                                            .weight(1f),
+                                        onClick = { },
+                                        color = Color.LightGray
+                                    )
+                                }
+                            }
+
+                        }
+                    }
+                }
             }
         }
     }
-
-//    Row(
-//        modifier = Modifier
-//            .fillMaxSize(),
-//        horizontalArrangement = Arrangement.SpaceEvenly
-//    ) {
-//        numberColumns.forEach { numberColumn ->
-//            Column(
-//                modifier = Modifier.weight(1f),
-//                horizontalAlignment = Alignment.CenterHorizontally
-//            ) {
-//                numberColumn.forEach { text ->
-//                    MainContentButton(text)
-//                }
-//            }
-//        }
-//        Divider(
-//            modifier = Modifier.width(1.dp).fillMaxHeight(),
-//            color = Color(0xFFd3d3d3)
-//        )
-//        Column(modifier = Modifier.weight(1.3f)) {
-//            operationsColumn.forEach { operation ->
-//                OperationItem(text = operation)
-//            }
-//        }
-//        Spacer(modifier = Modifier.width(30.dp))
-//    }
 }
-
-@Composable
-fun MainContentButton(text: String) {
-    Text(text = text, textAlign = TextAlign.Center)
-}
-
-@Composable
-fun OperationItem(text: String) {
-    Text(text = text, textAlign = TextAlign.Center)
-
-}
-
 @Composable
 fun NumberButton(
-    number : String,
+    number: String,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-    color : Color = Color.White
+    color: Color = Color.White
 ) {
     Box(
         contentAlignment = Alignment.Center,
@@ -158,7 +182,7 @@ fun NumberButton(
                 onClick()
             }
             .then(modifier)
-    ){
+    ) {
         Text(
             text = number,
             color = Color.White,
