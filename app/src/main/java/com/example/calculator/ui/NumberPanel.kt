@@ -22,16 +22,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 private val topColumns = listOf("AC", "Del", "/")
+private val bottomColumn = listOf("0", ".", "=")
 
 private val numberColumns = listOf(
-    listOf("7", "4", "1"),
-    listOf("8", "5", "2"),
-    listOf("9", "6", "3"),
-    listOf("x", "+", "-")
+    listOf("7", "4", "1","0"),
+    listOf("8", "5", "2","."),
+    listOf("9", "6", "3",""),
+    listOf("x", "+", "-","=")
 )
 
 @Composable
@@ -40,7 +41,8 @@ fun NumberPanel(
 ) {
 
     val buttonSpacing = 8.dp
-
+    val calculatorViewModel = viewModel<CalculatorViewModel>()
+    val state = calculatorViewModel.state
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -48,12 +50,11 @@ fun NumberPanel(
     ) {
         Column(
             modifier = modifier
-                .fillMaxSize()
                 .align(Alignment.BottomCenter)
                 .padding(16.dp)
         ) {
             Text(
-                text = "123123123",
+                text = state.number1 + (state.operation?.symbol ?: "") + state.number2,
                 textAlign = TextAlign.End,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -77,20 +78,28 @@ fun NumberPanel(
                                 modifier = Modifier
                                     .aspectRatio(2F)
                                     .weight(2f),
-                                onClick = { },
+                                onClick = {
+                                    calculatorViewModel.onAction(CalculatorAction.Clear)
+                                },
                                 color = Color.LightGray
                             )
                         }
-                        OperatorEnum.DIVIDED.toString() -> {
+
+                        CalculatorViewModel.DIVIDED -> {
                             NumberButton(
                                 number = it,
                                 modifier = Modifier
                                     .aspectRatio(1f)
                                     .weight(1f),
-                                onClick = { },
+                                onClick = {
+                                    calculatorViewModel.onAction(
+                                        CalculatorAction.Operation(CalculatorOperation.Divide)
+                                    )
+                                },
                                 color = Color.Magenta
                             )
                         }
+
                         else -> {
                             NumberButton(
                                 number = it,
@@ -105,7 +114,6 @@ fun NumberPanel(
 
                 }
             }
-
             Row {
                 numberColumns.forEach { numberColumn ->
                     Column(
@@ -116,36 +124,97 @@ fun NumberPanel(
                         verticalArrangement = Arrangement.spacedBy(buttonSpacing)
                     ) {
                         numberColumn.forEach { text ->
-                            when(text) {
-                                OperatorEnum.MINUS.toString() -> {
+                            when (text) {
+                                CalculatorViewModel.SUBTRACT -> {
                                     NumberButton(
                                         number = text,
                                         modifier = Modifier
                                             .aspectRatio(1f)
                                             .weight(1f),
-                                        onClick = { },
+                                        onClick = {
+                                            calculatorViewModel.onAction(
+                                                CalculatorAction.Operation(CalculatorOperation.Subtract)
+                                            )
+                                        },
                                         color = Color.Magenta
                                     )
                                 }
-                                OperatorEnum.MULTIPLY.toString() -> {
+                                CalculatorViewModel.MULTIPLY -> {
                                     NumberButton(
                                         number = text,
                                         modifier = Modifier
                                             .aspectRatio(1f)
                                             .weight(1f),
-                                        onClick = { },
+                                        onClick = {
+                                            calculatorViewModel.onAction(
+                                                CalculatorAction.Operation(CalculatorOperation.Multiply)
+                                            )
+                                        },
                                         color = Color.Magenta
                                     )
                                 }
-                                OperatorEnum.PLUS.toString() -> {
+
+                                CalculatorViewModel.ADD -> {
                                     NumberButton(
                                         number = text,
                                         modifier = Modifier
                                             .aspectRatio(1f)
                                             .weight(1f),
-                                        onClick = { },
+                                        onClick = {
+                                            calculatorViewModel.onAction(
+                                                CalculatorAction.Operation(CalculatorOperation.Add)
+                                            )
+                                        },
                                         color = Color.Magenta
                                     )
+                                }
+                                CalculatorViewModel.RESULT -> {
+                                    NumberButton(
+                                        number = text,
+                                        modifier = modifier
+                                            .aspectRatio(1f)
+                                            .weight(1f),
+                                        onClick = {
+                                            calculatorViewModel.onAction(CalculatorAction.Calculate)
+                                        },
+                                        color = Color.Magenta
+                                    )
+                                }
+                                CalculatorViewModel.DECIMAL -> {
+                                    NumberButton(
+                                        number = text,
+                                        modifier = modifier
+                                            .aspectRatio(1f)
+                                            .weight(1f),
+                                        onClick = {
+                                            calculatorViewModel.onAction(CalculatorAction.Decimal)
+                                        },
+                                        color = Color.LightGray
+                                    )
+                                }
+                                "0" -> {
+                                    NumberButton(
+                                        number = text,
+                                        modifier = modifier
+                                            .aspectRatio(1f)
+                                            .weight(1f),
+                                        onClick = {
+                                            calculatorViewModel.onAction(
+                                                CalculatorAction.Number(
+                                                    number = text.toInt()
+                                                )
+                                            )
+                                        },
+                                        color = Color.LightGray
+                                    )
+                                }
+                                "" -> {
+                                    NumberButton(number = "",
+                                        modifier = Modifier
+                                        .aspectRatio(1f)
+                                        .weight(1f),
+                                        onClick = {  },
+                                        color = Color.LightGray)
                                 }
                                 else -> {
                                     NumberButton(
@@ -153,12 +222,17 @@ fun NumberPanel(
                                         modifier = Modifier
                                             .aspectRatio(1f)
                                             .weight(1f),
-                                        onClick = { },
+                                        onClick = {
+                                            calculatorViewModel.onAction(
+                                                CalculatorAction.Number(
+                                                    text.toInt()
+                                                )
+                                            )
+                                        },
                                         color = Color.LightGray
                                     )
                                 }
                             }
-
                         }
                     }
                 }
