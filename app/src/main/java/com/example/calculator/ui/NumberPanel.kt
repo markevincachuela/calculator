@@ -106,7 +106,11 @@ fun NumberPanel(
                                 modifier = Modifier
                                     .aspectRatio(1f)
                                     .weight(1f),
-                                onClick = { },
+                                onClick = {
+                                    calculatorViewModel.onAction(
+                                        CalculatorAction.Delete
+                                    )
+                                },
                                 color = Color.LightGray
                             )
                         }
