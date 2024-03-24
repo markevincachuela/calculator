@@ -26,7 +26,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 private val topColumns = listOf("AC", "Del", "/")
-private val bottomColumn = listOf("0", ".", "=")
 
 private val numberColumns = listOf(
     listOf("7", "4", "1","0"),
